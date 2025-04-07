@@ -20,8 +20,7 @@ const DB = "mongodb+srv://jaat0050:tictactoe123@tictactoe.cfxgfml.mongodb.net/?r
 io.on("connection", (socket) => {
     console.log("io connected!");
     socket.on("createRoom", async ({ nickname }) => {
-        console.log(nickname);
-        console.log(socket.id);
+
         try {
             // room is created
             let room = new Room();
@@ -34,7 +33,6 @@ io.on("connection", (socket) => {
             room.turn = player;
             // player is stored in the mongodb
             room = await room.save();
-            console.log(room);
             const roomId = room._id.toString();
 
             socket.join(roomId);
@@ -47,12 +45,9 @@ io.on("connection", (socket) => {
     });
 
     socket.on("joinRoom", async ({ nickname, roomId }) => {
-        console.log(nickname);
-        console.log(roomId);
-        console.log(socket.id);
+
         try {
             // check room id
-            // if (roomId.match(/^[0-9a-fA-F]{24}$/)) {
             if (!/^[0-9a-fA-F]{24}$/.test(roomId)) {
                 socket.emit('errorOccurred', 'Please enter valid room ID');
                 return;
